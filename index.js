@@ -26,6 +26,11 @@ app.post('/capture-screenshot', async (req, res) => {
         const { html } = req.body;
         const style = await fs.readFile(path.join(__dirname, 'public', 'css', 'style.css'), 'utf8');
 
+        const isProduction = process.env.NODE_ENV === 'production';
+        const chromePath = isProduction 
+            ? '/usr/bin/chromium-browser'
+            : 'C:\\Users\\rauta\\.cache\\puppeteer\\chrome\\win64-127.0.6533.88\\chrome-win64\\chrome.exe';
+
         const browser = await puppeteer.launch({
             args: [
                 '--no-sandbox',
@@ -34,7 +39,7 @@ app.post('/capture-screenshot', async (req, res) => {
                 '--single-process'
             ],
             headless: "new",
-            executablePath: 'C:\\Users\\rauta\\.cache\\puppeteer\\chrome\\win64-127.0.6533.88\\chrome-win64\\chrome.exe'
+            executablePath: chromePath
         });
         const page = await browser.newPage();
 
