@@ -4,9 +4,9 @@
   "description": "Infographic website with screenshot functionality",
   "main": "index.js",
   "scripts": {
+    "postinstall": "npx puppeteer browsers install chrome",
     "start": "node index.js",
-    "dev": "nodemon index.js",
-    "build": "npx puppeteer browsers install chrome"
+    "dev": "nodemon index.js"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
