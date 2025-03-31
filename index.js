@@ -1,5 +1,5 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer'); // Use puppeteer instead of puppeteer-core
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
@@ -9,6 +9,7 @@ const fs = require('fs').promises;
 const app = express();
 const port = process.env.PORT || 3000;
 
+// Middleware setup
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
 app.set("view engine", "ejs");
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
+// Routes
 app.get('/', (req, res) => {
     res.render('pinterest', { title: 'Screenshot App' });
 });
@@ -26,11 +28,6 @@ app.post('/capture-screenshot', async (req, res) => {
         const { html } = req.body;
         const style = await fs.readFile(path.join(__dirname, 'public', 'css', 'style.css'), 'utf8');
 
-        const isProduction = process.env.NODE_ENV === 'production';
-        const chromePath = isProduction 
-            ? '/usr/bin/chromium-browser'
-            : 'C:\\Users\\rauta\\.cache\\puppeteer\\chrome\\win64-127.0.6533.88\\chrome-win64\\chrome.exe';
-
         const browser = await puppeteer.launch({
             args: [
                 '--no-sandbox',
@@ -38,9 +35,9 @@ app.post('/capture-screenshot', async (req, res) => {
                 '--disable-dev-shm-usage',
                 '--single-process'
             ],
-            headless: "new",
-            executablePath: chromePath
+            headless: "new"
         });
+
         const page = await browser.newPage();
 
         await page.setContent(`
@@ -58,10 +55,8 @@ app.post('/capture-screenshot', async (req, res) => {
             </html>
         `, { waitUntil: 'networkidle0' });
 
-        // Wait for fonts to load completely
         await page.evaluateHandle('document.fonts.ready');
-
-        // Ensure content is properly sized
+        
         const height = await page.evaluate(() => document.documentElement.offsetHeight);
         await page.setViewport({
             width: 840,
