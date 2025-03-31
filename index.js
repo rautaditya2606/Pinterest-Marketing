@@ -34,7 +34,7 @@ app.post('/capture-screenshot', async (req, res) => {
                 '--single-process'
             ],
             headless: "new",
-            executablePath: process.env.RENDER ? '/usr/bin/google-chrome' : undefined
+            executablePath: 'C:\\Users\\rauta\\.cache\\puppeteer\\chrome\\win64-127.0.6533.88\\chrome-win64\\chrome.exe'
         });
         const page = await browser.newPage();
 
