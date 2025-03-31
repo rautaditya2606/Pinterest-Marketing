@@ -1,0 +1,318 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    line-height: 1.55;
+    color: #2d2d2d;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    background-color: #e6f2f7;
+}
+
+h1 {
+    color: #006b76;
+    text-align: center;
+    margin-bottom: 50px;
+    font-size: 36px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
+}
+
+.infographic-container {
+    background-color: #e6f2f7;
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+}
+
+.timeline {
+    position: relative;
+    margin: 0 auto;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    background: #006b76;
+    top: 50px;
+    bottom: 50px;
+    left: 50%;
+    margin-left: -3px;
+    z-index: 0;
+    border-radius: 3px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.point {
+    display: flex;
+    align-items: center;
+    margin-bottom: 80px;
+    position: relative;
+    gap: 350px;
+    /* adds spacing between .point-content and .number-box */
+}
+
+.point::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    background-color: #006b76;
+    height: 9px;
+    z-index: 1;
+}
+
+.point:nth-child(even)::after {
+    left: 50%;
+    width: 180px;
+    /* Adjust if needed */
+    transform: translateY(-50%);
+}
+
+.point:nth-child(odd)::after {
+    right: 50%;
+    width: 180px;
+    /* Adjust if needed */
+    transform: translateY(-50%);
+}
+
+/* Odd points: number box left, text right */
+.point:nth-child(odd) .number-box {
+    order: 1;
+}
+
+.point:nth-child(odd) .point-content {
+    order: 2;
+}
+
+/* Even points: text left, number box right */
+.point:nth-child(even) .point-content {
+    order: 1;
+}
+
+.point:nth-child(even) .number-box {
+    order: 2;
+}
+
+.point-marker {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 32px;
+    background: #e6f2f7;
+    border: 7px solid #006b76;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.point-content {
+    width: 45%;
+}
+
+.number-box {
+    width: 300px;
+    height: 120px;
+    background-color: #b6e0ea;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    /* margin-bottom: 20px; */
+}
+
+.number {
+    position: absolute;
+    font-size: 290px;
+    font-weight: 800;
+    color: #006b76;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-shadow:
+        4px 4px 0 #004c54,
+        8px 8px 0 rgba(0, 0, 0, 0.15);
+    line-height: 1;
+}
+
+.point:nth-child(odd) .number-box,
+.point:nth-child(odd) .number {
+    /* Remove margin-left: auto to keep number box next to the node */
+    /* margin-left: auto; */
+}
+
+h2 {
+    color: #006b76;
+    margin-bottom: 10px;
+    font-size: 22px;
+}
+
+.point p {
+    margin-top: 0;
+    font-size: 16px;
+}
+
+.cta-button {
+    display: block;
+    width: 200px;
+    margin: 30px auto;
+    padding: 12px;
+    background-color: #006b76;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cta-button:hover {
+    background-color: #004c54;
+}
+
+@media (max-width: 992px) {
+    .point {
+        gap: 100px;
+        /* Reduce gap for medium screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .point {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        /* Reduce gap on small screens */
+    }
+
+    .point:nth-child(odd) {
+        flex-direction: column;
+    }
+
+    .point-content {
+        width: 100%;
+    }
+
+    .number-box {
+        width: 80px;
+        /* Reduce size for mobile */
+        height: 40px;
+    }
+
+    .number {
+        font-size: 100px;
+    }
+}
+
+/* Connector Line */
+.connector-line {
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 4px;
+    background-color: #006b76;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px 15px;
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+
+    .timeline::before {
+        left: 31px;
+        /* Move timeline to the left */
+        margin-left: 0;
+        top: 40px;
+        bottom: 40px;
+    }
+
+    .point {
+        flex-direction: row;
+        gap: 20px;
+        margin-bottom: 50px;
+        align-items: flex-start;
+        margin-left: 60px;
+        /* Make space for timeline */
+    }
+
+    .point::after {
+        display: none;
+        /* Hide connector lines */
+    }
+
+    .point-marker {
+        left: 31px;
+        /* Align with timeline */
+        transform: translateX(-50%);
+    }
+
+    .number-box {
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        left: -85px;
+        /* Position to left of content */
+        top: 0;
+    }
+
+    .number {
+        font-size: 50px;
+        text-shadow:
+            2px 2px 0 #004c54,
+            4px 4px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .point-content {
+        width: 100%;
+        margin-left: 0;
+        padding: 15px;
+        background: rgba(182, 224, 234, 0.2);
+        border-radius: 8px;
+    }
+
+    /* Reset order for mobile layout */
+    .point:nth-child(odd) .number-box,
+    .point:nth-child(even) .number-box {
+        order: 0;
+        left: -85px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .point p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .point {
+        margin-left: 40px;
+    }
+
+    .number-box {
+        width: 50px;
+        height: 50px;
+        left: -70px;
+    }
+
+    .number {
+        font-size: 40px;
+    }
+
+    .point-marker {
+        width: 26px;
+        height: 26px;
+        border-width: 5px;
+    }
+}

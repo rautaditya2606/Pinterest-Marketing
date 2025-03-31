@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinterest Marketing Infographic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="infographic-container" id="infographic">
+        <h1>Harnessing Infographics for<br>Effective Pinterest Marketing</h1>
+
+        <div class="timeline">
+            <% const points = [
+                { number: 1, title: "Enhancing Visual Appeal",
+                  content: "Infographics leverage visually appealing designs, which can capture users' attention quickly on Pinterest's image-centric platform. This visual aspect can lead to increased engagement and higher pin rates." },
+                { number: 2, title: "Simplifying Complex Information",
+                  content: "Infographics simplify complex data and concepts into digestible visual formats. This is particularly useful for e-commerce brands or service providers looking to explain products or services quickly." },
+                { number: 3, title: "Boosting Brand Awareness",
+                  content: "Consistent use of infographics helps in building brand identity. By using specific colors, fonts, and styles, brands can create a distinct visual language that resonates with users and enhances recall." },
+                { number: 4, title: "Encouraging Shares and Saves",
+                  content: "Infographics are highly shareable content; they encourage users to save, pin, or share them due to their informative nature. This can lead to organic reach and visibility on Pinterest." },
+                { number: 5, title: "Driving Traffic to Websites",
+                  content: "Infographics can include call-to-actions (CTAs) linking back to your website or landing page, facilitating the conversion of Pinterest users into website visitors, thus driving traffic effectively." },
+                { number: 6, title: "Leveraging SEO Benefits",
+                  content: "When properly tagged with keywords and descriptions, infographics can enhance SEO on Pinterest. This can improve discoverability, making it easier for users interested in specific topics to find your pins." },
+                { number: 7, title: "Creating Educational Content",
+                  content: "Infographics can serve as educational tools or tutorials, providing value to your audience. This type of informative content can establish authority in your niche and attract a loyal following." }
+            ]; %>
+
+            <% points.forEach((point) => { %>
+                <div class="point">
+                    <div class="point-marker"></div>
+                    <div class="point-content">
+                        <h2><%= point.title %></h2>
+                        <p><%= point.content %></p>
+                    </div>
+                    <div class="number-box">
+                        <div class="number"><%= point.number %></div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <button id="screenshot-btn" class="cta-button">Take Screenshot</button>
+
+    <script>
+        document.getElementById('screenshot-btn').addEventListener('click', function () {
+            this.textContent = 'Capturing...';
+            this.disabled = true;
+
+            const element = document.getElementById('infographic');
+            const htmlContent = element.outerHTML;
+
+            fetch('/capture-screenshot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ html: htmlContent })
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('Network error');
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'infographic.png';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+
+                    this.textContent = 'Take Screenshot';
+                    this.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.textContent = 'Try Again';
+                    this.disabled = false;
+                });
+        });
+    </script>
+</body>
+</html>

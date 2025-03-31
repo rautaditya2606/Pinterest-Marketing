@@ -1,0 +1,22 @@
+{
+  "name": "infographic-screenshot",
+  "version": "1.0.0",
+  "description": "Infographic website with screenshot functionality",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.9",
+    "ejs-mate": "^4.0.0",
+    "express": "^4.18.2",
+    "method-override": "^3.0.0",
+    "puppeteer": "^22.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
