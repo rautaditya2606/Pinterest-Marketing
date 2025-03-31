@@ -27,8 +27,14 @@ app.post('/capture-screenshot', async (req, res) => {
         const style = await fs.readFile(path.join(__dirname, 'public', 'css', 'style.css'), 'utf8');
 
         const browser = await puppeteer.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--single-process'
+            ],
+            headless: "new",
+            executablePath: process.env.RENDER ? '/usr/bin/google-chrome' : undefined
         });
         const page = await browser.newPage();
 
@@ -69,7 +75,7 @@ app.post('/capture-screenshot', async (req, res) => {
         res.send(screenshot);
     } catch (error) {
         console.error('Error capturing screenshot:', error);
-        res.status(500).send('Error capturing screenshot');
+        res.status(500).json({ message: 'Error capturing screenshot', error: error.message });
     }
 });
 
