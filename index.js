@@ -33,9 +33,11 @@ app.post('/capture-screenshot', async (req, res) => {
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
-                '--single-process'
+                '--single-process',
+                '--font-render-hinting=none' // Critical for font rendering
             ],
-            headless: "new"
+            headless: 'new',
+            executablePath: '/usr/bin/chromium-browser' // Render's chromium path
         });
 
         const page = await browser.newPage();
@@ -56,7 +58,7 @@ app.post('/capture-screenshot', async (req, res) => {
         `, { waitUntil: 'networkidle0' });
 
         await page.evaluateHandle('document.fonts.ready');
-        
+
         const height = await page.evaluate(() => document.documentElement.offsetHeight);
         await page.setViewport({
             width: 840,
