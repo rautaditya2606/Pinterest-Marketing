@@ -17,10 +17,6 @@ app.use(express.urlencoded({ extended: true }));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-// app.get('/', (req, res) => {
-//     res.send('App is running');
-// });
-
 app.get('/', (req, res) => {
     res.render('pinterest', { title: 'Screenshot App' });
 });
