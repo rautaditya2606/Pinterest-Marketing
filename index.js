@@ -5,7 +5,7 @@ const ejs = require('ejs');
 const fs = require('fs').promises;
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -20,7 +20,15 @@ app.get('/', (req, res) => {
 // Handle screenshot capture
 app.post('/capture-screenshot', async (req, res) => {
     try {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--single-process'
+            ],
+            headless: "new"
+        });
         const page = await browser.newPage();
         
         // Read CSS file

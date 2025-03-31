@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "build": "echo 'Skipping build step'",
-    "postinstall": "echo 'Skipping postinstall'"
+    "build": "npm install && npx puppeteer browsers install chrome"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
