@@ -1,86 +1,79 @@
 const express = require('express');
-const puppeteer = require('puppeteer'); // Use puppeteer instead of puppeteer-core
-const bodyParser = require('body-parser');
-const cors = require('cors');
+const puppeteer = require('puppeteer');
 const path = require('path');
-const ejsMate = require('ejs-mate');
+const ejs = require('ejs');
 const fs = require('fs').promises;
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
 
-// Middleware setup
-app.use(cors());
-app.use(bodyParser.json({ limit: '10mb' }));
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-app.use(express.urlencoded({ extended: true }));
-app.engine("ejs", ejsMate);
-app.use(express.static(path.join(__dirname, "/public")));
+// Middleware
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+app.set('view engine', 'ejs');
 
-// Routes
+// Serve the main page
 app.get('/', (req, res) => {
-    res.render('pinterest', { title: 'Screenshot App' });
+    res.render('pinterest');
 });
 
+// Handle screenshot capture
 app.post('/capture-screenshot', async (req, res) => {
     try {
-        const { html } = req.body;
-        const style = await fs.readFile(path.join(__dirname, 'public', 'css', 'style.css'), 'utf8');
-
-        const browser = await puppeteer.launch({
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--single-process',
-                '--font-render-hinting=none' // Critical for font rendering
-            ],
-            headless: 'new',
-            executablePath: '/usr/bin/chromium-browser' // Render's chromium path
-        });
-
+        const browser = await puppeteer.launch();
         const page = await browser.newPage();
-
-        await page.setContent(`
-            <!DOCTYPE html>
-            <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-                    <style>${style}</style>
-                </head>
-                <body>
-                    ${html}
-                </body>
-            </html>
-        `, { waitUntil: 'networkidle0' });
-
-        await page.evaluateHandle('document.fonts.ready');
-
-        const height = await page.evaluate(() => document.documentElement.offsetHeight);
+        
+        // Read CSS file
+        const cssContent = await fs.readFile(path.join(__dirname, 'public', 'css', 'style.css'), 'utf8');
+        
+        // Set viewport size for the screenshot
         await page.setViewport({
-            width: 840,
-            height: height,
+            width: 800,
+            height: 2000,
             deviceScaleFactor: 2
         });
 
+        // Render the HTML content with inline CSS
+        const htmlContent = `
+            <html>
+                <head>
+                    <style>${cssContent}</style>
+                </head>
+                <body>
+                    ${req.body.html}
+                </body>
+            </html>
+        `;
+        
+        await page.setContent(htmlContent, {
+            waitUntil: 'networkidle0'
+        });
+
+        // Wait for fonts to load
+        await page.waitForFunction(() => document.fonts.ready);
+
+        // Take screenshot
         const screenshot = await page.screenshot({
             type: 'png',
             fullPage: true,
-            omitBackground: false
+            omitBackground: true
         });
 
         await browser.close();
-        res.set('Content-Type', 'image/png');
-        res.send(screenshot);
+
+        // Send the screenshot
+        res.writeHead(200, {
+            'Content-Type': 'image/png',
+            'Content-Length': screenshot.length
+        });
+        res.end(screenshot);
+
     } catch (error) {
-        console.error('Error capturing screenshot:', error);
-        res.status(500).json({ message: 'Error capturing screenshot', error: error.message });
+        console.error('Screenshot error:', error);
+        res.status(500).send('Error generating screenshot');
     }
 });
 
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+    console.log(`Server running at http://localhost:${port}`);
 });
